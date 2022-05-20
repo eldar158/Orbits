@@ -6,17 +6,17 @@ canvas.width = ww;
 
 const ctx = canvas.getContext('2d')
 
-const planets = [
-  new Planet(30, 300, 100, wh / 2 , 0, 1, 'blue', 'black'),
-  new Planet(30, 300, 700 - 100, wh / 2, 0, -1, 'red', 'black'),
-  new Planet(30, 300, 350, wh - 100, 1, 0, 'green', 'black'),
-  new Planet(30, 300, 350, 100, -1, 0, 'yellow', 'black'),
-]
-
 // const planets = [
-//   new Planet(30, 2950, 200, wh / 2 , 0, 2, 'blue', 'black'),
-//   new Planet(30, 2950, ww -200, wh / 2, 0, -2, 'red', 'black'),
+//   new Planet(30, 300, 100, wh / 2 , 0, 1, 'blue', 'black'),
+//   new Planet(30, 300, 700 - 100, wh / 2, 0, -1, 'red', 'black'),
+//   new Planet(30, 300, 350, wh - 100, 1, 0, 'green', 'black'),
+//   new Planet(30, 300, 350, 100, -1, 0, 'yellow', 'black'),
 // ]
+
+const planets = [
+  new Planet(30, 2950, 200, wh / 2 , 0, 2, 'blue', 'black'),
+  new Planet(30, 2950, ww -200, wh / 2, 0, -2, 'red', 'black'),
+]
 
 
 animate()

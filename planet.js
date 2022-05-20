@@ -1,5 +1,5 @@
 class Planet {
-  constructor (radius, mass, x, y, vx=0, vy=0, color="blue", surfaceColor='black') {
+  constructor (radius, mass, x, y, vx=0, vy=0, color="blue", surfaceColor='black', controlType="none", controlForce=5) {
     this.r = radius
     this.m = mass
     this.color = color
@@ -11,23 +11,36 @@ class Planet {
     this.vy = vy
 
     this.history = []
+    if (controlType !== 'none') {
+      this.controls = new Controls(controlType, controlForce)
+    }
   }
 
   update(planets) {
+
+
     
-    var [fx, fy] = [0,0]
+    var [gx, gy] = [0,0]
     for (let i = 0; i < planets.length; i++) {
       const planet = planets[i]
 
       const f = calcGravity(this, planet)
       const a = calcAngle(this, planet)
 
-      fx += f * Math.sin(a)
-      fy += f * Math.cos(a)
+      gx += f * Math.sin(a)
+      gy += f * Math.cos(a)
     }
 
-    this.ax = fx / this.m
-    this.ay = fy / this.m
+    if (this.controls) {
+      const [fx, fy] = this.controls.getForce(this.controls)
+      this.ax = (gx + fx) / this.m
+      this.ay = (gy + fy) / this.m
+    } else {
+      this.ax = gx / this.m
+      this.ay = gy / this.m
+    }
+
+
 
     this.vx += this.ax
     this.vy += this.ay

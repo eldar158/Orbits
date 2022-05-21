@@ -13,9 +13,14 @@ const ctx = canvas.getContext('2d')
 //   new Planet(30, 300, 350, 100, -1, 0, 'yellow', 'black'),
 // ]
 
+// const planets = [
+//   new Planet(30, 900, 200, wh / 2 , 0, 1, 'yellow', 'black'),
+//   new Planet(30, 900, ww -200, wh / 2, 0, -1, 'green', 'black'),
+// ]
+
 const planets = [
-  new Planet(30, 2950, 200, wh / 2 , 0, 2, 'blue', 'black'),
-  new Planet(30, 2950, ww -200, wh / 2, 0, -2, 'red', 'black'),
+  new Planet(30, 3300, ww / 2, wh / 2 , 0, 0, 'yellow', 'black'),
+  new Planet(10, 1, ww / 2, wh / 2 + 200 , -4, 0, 'blue', 'cyan'),
 ]
 
 

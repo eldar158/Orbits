@@ -1,5 +1,5 @@
 class Planet {
-  constructor (radius, mass, x, y, vx=0, vy=0, color="blue", surfaceColor='black', controlType="none", controlForce=5) {
+  constructor (radius, mass, x, y, vx=0, vy=0, color="blue", surfaceColor='black', controlType, controlForce) {
     this.r = radius
     this.m = mass
     this.color = color
@@ -9,47 +9,41 @@ class Planet {
     this.y = y
     this.vx = vx
     this.vy = vy
+    this.ax = 0
+    this.ay = 0
 
     this.history = []
+
     if (controlType !== 'none') {
       this.controls = new Controls(controlType, controlForce)
     }
   }
 
   update(planets) {
-
-
-    
-    var [gx, gy] = [0,0]
-    for (let i = 0; i < planets.length; i++) {
-      const planet = planets[i]
-
-      const f = calcGravity(this, planet)
-      const a = calcAngle(this, planet)
-
-      gx += f * Math.sin(a)
-      gy += f * Math.cos(a)
-    }
-
+    const f = getGravityForce(this, planets)
     if (this.controls) {
       const [fx, fy] = this.controls.getForce(this.controls)
-      this.ax = (gx + fx) / this.m
-      this.ay = (gy + fy) / this.m
-    } else {
-      this.ax = gx / this.m
-      this.ay = gy / this.m
+      f.x += fx
+      f.y += fy
     }
-
-
+    
+    // Oiler solver
+    this.ax = g.x / this.m
+    this.ay = g.y / this.m
 
     this.vx += this.ax
     this.vy += this.ay
 
     this.x += this.vx
     this.y += this.vy
+    // Oiler solver
+
 
     this.history.push({x: this.x, y: this.y})
+    if ( this.history.length > 500 ) this.history.splice(0,1)
   }
+
+  
 
   draw (ctx) {
     ctx.beginPath()

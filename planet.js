@@ -19,28 +19,39 @@ class Planet {
     }
   }
 
-  update(planets) {
+  update(planets, dt) {
     const f = getGravityForce(this, planets)
     if (this.controls) {
       const [fx, fy] = this.controls.getForce(this.controls)
       f.x += fx
       f.y += fy
     }
+    this.ax = f.x / this.m
+    this.ay = f.y / this.m
     
-    // Oiler solver
-    this.ax = g.x / this.m
-    this.ay = g.y / this.m
+    this.#useOiler(dt)
+    // this.#useODE45(dt)
+  }
 
-    this.vx += this.ax
-    this.vy += this.ay
-
-    this.x += this.vx
-    this.y += this.vy
-    // Oiler solver
-
-
+  pushHistory(maxHistorySize) {
     this.history.push({x: this.x, y: this.y})
-    if ( this.history.length > 500 ) this.history.splice(0,1)
+    if ( this.history.length > maxHistorySize ) this.history.splice(0,1)
+  }
+
+  #useOiler(dt) {
+    this.vx += this.ax * dt
+    this.vy += this.ay * dt
+  
+    this.x += this.vx * dt
+    this.y += this.vy * dt
+  }
+
+  #useODE45(dt) {
+    this.x += this.vx * dt
+    this.y += this.vy * dt
+
+    this.vx += this.ax * dt
+    this.vy += this.ay * dt
   }
 
   

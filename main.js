@@ -29,10 +29,10 @@ const planets4 = [
   new Planet(1, 0.1, ww / 2, wh / 2 + 215 , -3.6, 0, 'grey', 'black'),
 ]
 
-const system = new System(planets2)
+const system = new System(planets4)
 
 
-animate(1, 1000, 100)
+animate(1, 10000, 500)
 
 
 function animate(step, calcCount, maxHistorySize) {
@@ -44,10 +44,12 @@ function animate(step, calcCount, maxHistorySize) {
 
   const dt = step / calcCount
   for (let i = 0; i < calcCount; i++) {
-    system.solveEuler(dt)
+    // system.solveEuler(dt)
+    system.solveMidpoint(dt)
   }
 
   system.pushHistory(maxHistorySize)
+  
   system.drawHistory()
   system.draw()
   

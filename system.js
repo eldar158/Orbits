@@ -27,36 +27,69 @@ class System {
     this.updateAcceleration()
   }
 
-  // solveMidpoint(dt) {
-  //   const f = this.#getForce(planets)
-  //   this.ax = f.x / this.m
-  //   this.ay = f.y / this.m
-
-  //   const mid = dt / 2 
-
-
-  //   const m_vx = this.vx + mid * this.ax
-  //   const m_vy = this.vy + mid * this.ay
-  //   const m_x  = this.x +  mid * this.vx
-  //   const m_y  = this.y +  mid * this.vy
-
-  //   this.vx += dt * this.ax
-  //   this.vy += dt * this.ay
-  //   this.x += dt * m_vx
-  //   this.y += dt * m_vy
+  // solveEuler(step) {
+  //   const planets = this.planets
+  //   var f
+  //   for (let i = 0; i < planets.length; i++) {
+  //     const p = planets[i]
+  //     f = getGravityForce(p, planets)
+  //     if (p.controls) {
+  //       const [fx, fy] = p.controls.getForce(p.controls)
+  //       f.x += fx
+  //       f.y += fy
+  //     }
+  //     p.x  += step * p.vx
+  //     p.y  += step * p.vy
+  //     p.vx += step * p.ax
+  //     p.vy += step * p.ay
+  //     p.ax =  f.x / p.m
+  //     p.ay =  f.y / p.m
+  //   }
   // }
+
+  solveMidpoint(step) {
+    const mid = step / 2 
+
+    for (let i = 0; i < this.planets.length; i++) {
+      const p = this.planets[i]
+      p.x += mid * p.vx
+      p.y += mid * p.vy
+    }
+
+    for (let i = 0; i < this.planets.length; i++) {
+      const p = this.planets[i]
+
+      const m_vx = p.vx + mid * p.ax
+      const m_vy = p.vy + mid * p.ay
+
+      const m_f = getGravityForce(p, this.planets)
+      const m_ax = m_f.x / p.m
+      const m_ay = m_f.y / p.m
+
+      p.x -=  mid * p.vx //remove back to add using midpoint
+      p.y -=  mid * p.vy
+
+      p.x  += step * m_vx
+      p.y  += step * m_vy
+
+      p.vx += step * m_ax
+      p.vy += step * m_ay
+    }
+  }
 
   updateLocation(step) {
     for (let i = 0; i < this.planets.length; i++) {
-      this.planets[i].x += step * this.planets[i].vx
-      this.planets[i].y += step * this.planets[i].vy
+      const p = this.planets[i]
+      p.x += step * p.vx
+      p.y += step * p.vy
     }
   }
 
   updateVelocity(step) {
     for (let i = 0; i < this.planets.length; i++) {
-      this.planets[i].vx += step * this.planets[i].ax
-      this.planets[i].vy += step * this.planets[i].ay
+      const p = this.planets[i]
+      p.vx += step * p.ax
+      p.vy += step * p.ay
     }
   }
 

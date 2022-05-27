@@ -3,15 +3,15 @@ class System {
     this.planets = planets
   }
 
-  draw() {
+  draw(scale) {
     for (let i = 0; i < this.planets.length; i++) {
-      this.planets[i].draw(ctx)
+      this.planets[i].draw(ctx, scale)
     }
   }
 
-  drawHistory() {
+  drawHistory(scale) {
     for (let i = 0; i < this.planets.length; i++) {
-      this.planets[i].drawHistory(ctx)
+      this.planets[i].drawHistory(ctx, scale)
     }
   }
 
@@ -24,31 +24,27 @@ class System {
   solveEuler(step) {
     this.updateLocation(step)
     this.updateVelocity(step)
-    this.updateAcceleration()
   }
 
-  // solveEuler(step) {
-  //   const planets = this.planets
-  //   var f
-  //   for (let i = 0; i < planets.length; i++) {
-  //     const p = planets[i]
-  //     f = getGravityForce(p, planets)
-  //     if (p.controls) {
-  //       const [fx, fy] = p.controls.getForce(p.controls)
-  //       f.x += fx
-  //       f.y += fy
-  //     }
-  //     p.x  += step * p.vx
-  //     p.y  += step * p.vy
-  //     p.vx += step * p.ax
-  //     p.vy += step * p.ay
-  //     p.ax =  f.x / p.m
-  //     p.ay =  f.y / p.m
-  //   }
-  // }
-
   solveMidpoint(step) {
-    const mid = step / 2 
+    const mid = step / 2
+    this.updateLocation(mid)
+    this.updateVelocity(mid)
+
+    
+  }
+
+  solveMidpoint2(step) {
+    const mid = step / 2
+
+    const s_a_arr = []
+    for (let i = 0; i < this.planets.length; i++) {
+      const p = this.planets[i]
+      const s_f = getGravityForce(p, this.planets)
+      const s_ax = s_f.x / p.m
+      const s_ay = s_f.y / p.m
+      s_a_arr.push({x: s_ax, y: s_ay})
+    }
 
     for (let i = 0; i < this.planets.length; i++) {
       const p = this.planets[i]
@@ -59,8 +55,8 @@ class System {
     for (let i = 0; i < this.planets.length; i++) {
       const p = this.planets[i]
 
-      const m_vx = p.vx + mid * p.ax
-      const m_vy = p.vy + mid * p.ay
+      const m_vx = p.vx + mid * s_a_arr[i].x
+      const m_vy = p.vy + mid * s_a_arr[i].y
 
       const m_f = getGravityForce(p, this.planets)
       const m_ax = m_f.x / p.m
@@ -88,24 +84,14 @@ class System {
   updateVelocity(step) {
     for (let i = 0; i < this.planets.length; i++) {
       const p = this.planets[i]
-      p.vx += step * p.ax
-      p.vy += step * p.ay
-    }
-  }
-
-  updateAcceleration() {
-    const planets = this.planets
-    var f
-    for (let i = 0; i < planets.length; i++) {
-      const p = planets[i]
-      f = getGravityForce(p, planets)
+      const f = getGravityForce(p, this.planets)
       if (p.controls) {
         const [fx, fy] = p.controls.getForce(p.controls)
         f.x += fx
         f.y += fy
       }
-      p.ax = f.x / p.m
-      p.ay = f.y / p.m
+      p.vx += step * f.x / p.m
+      p.vy += step * f.y / p.m
     }
   }
 

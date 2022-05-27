@@ -9,8 +9,6 @@ class Planet {
     this.y = y
     this.vx = vx
     this.vy = vy
-    this.ax = 0
-    this.ay = 0
 
     this.history = []
 
@@ -28,21 +26,21 @@ class Planet {
     if ( this.history.length > maxHistorySize ) this.history.splice(0,1)
   }
 
-  draw (ctx) {
+  draw (ctx, scale) {
     ctx.beginPath()
     ctx.fillStyle = this.color
     ctx.strokeStyle = this.surfaceColor
-    ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
+    ctx.arc(this.x / scale, this.y / scale, this.r / scale, 0, 2 * Math.PI);
     ctx.fill();
     ctx.stroke()
   }
 
-  drawHistory (ctx) {
+  drawHistory (ctx, scale) {
     ctx.beginPath()
     ctx.strokeStyle = this.color
     for (let i = 0; i < this.history.length - 1; i++) {
-      ctx.moveTo(this.history[i].x, this.history[i].y)
-      ctx.lineTo(this.history[i+1].x, this.history[i+1].y)
+      ctx.moveTo(this.history[i].x / scale, this.history[i].y / scale)
+      ctx.lineTo(this.history[i+1].x / scale, this.history[i+1].y / scale)
     }
     ctx.stroke()
   }

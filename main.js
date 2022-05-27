@@ -61,36 +61,62 @@ const planets7 = [
     7.3477 * Math.pow(10, 22),
     Math.pow(10, 9) / 2,
     Math.pow(10, 9) / 2 + 405696000,
-    -968,
+    // -968,
+    500,
     0,
     'grey', 'black'
   )
 ]
 
-const system = new System(planets7)
-const scale = Math.pow(10, 9) / ww;
+// const scale = Math.pow(10, 9) / ww;
+const scale = 1
+
+const hour = 3600
+const day =  24 * hour
+const month = 30 * day
+const year = 12 * month
+
+const callback = (system) => {
+  const hist0 = system.planets[0].history
+  const hist1 = system.planets[1].history
+  
+  var minDis = calcDis(hist0[0], hist1[0])
+  for (let i = 1; i < hist0.length; i++) {
+    minDis = Math.min(minDis, calcDis(hist0[i], hist1[i]))
+  }
+  console.log('the minimum dis is: ')
+  console.log(minDis - system.planets[0].r)
+  console.log(hist0.length)
+}
+
+const system = new System(planets4)
+
+animate(0, day , 2, 100, 2000, callback)
 
 
-animate(0, 100000, 100, 1000)
 
-
-function animate(time, step, calcCount, maxHistorySize) {
-  console.log(time / (3600 * 24))
+function animate(time, endTime, step, calcCount, maxHistorySize, callback) {
+  console.log(time / day)
   resetCanvas()
   // track(1)
 
   const dt = step / calcCount
   for (let i = 0; i < calcCount; i++) {
-    system.solveEuler(dt)
-    // system.solveMidpoint(dt)
-  }
+    // system.solveEuler(dt)
+    system.solveMidpoint(dt)
 
-  system.pushHistory(maxHistorySize)
+    system.pushHistory(maxHistorySize)
+  }
   
+
   system.drawHistory(scale)
   system.draw(scale)
   
-  requestAnimationFrame(() => {animate(time + step, step, calcCount, maxHistorySize)})
+  if ( time + step <= endTime ) {
+    requestAnimationFrame(() => {animate(time + step, endTime, step, calcCount, maxHistorySize, callback)})
+  } else {
+    callback(system)
+  }
 }
 
 function resetCanvas() {

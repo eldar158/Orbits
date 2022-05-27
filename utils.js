@@ -1,5 +1,5 @@
-// const G = 1
-const G = 6.67384 * Math.pow(10, -11)
+const G = 1
+// const G = 6.67384 * Math.pow(10, -11)
 
 function getGravityForce(p, planets) {
   const g = {x: 0, y: 0}

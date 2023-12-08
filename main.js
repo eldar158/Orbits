@@ -89,26 +89,25 @@ const callback = (system) => {
   console.log(hist0.length)
 }
 
-const system = new System(planets4)
+const system = new System(planets5)
+const tracker = new Tracker(system.planets)
 
 animate(0, day , 2, 100, 2000, callback)
 
 
 
 function animate(time, endTime, step, calcCount, maxHistorySize, callback) {
-  console.log(time / day)
+  // console.log(time / day)
   resetCanvas()
-  // track(1)
 
   const dt = step / calcCount
   for (let i = 0; i < calcCount; i++) {
     // system.solveEuler(dt)
     system.solveMidpoint(dt)
-
     system.pushHistory(maxHistorySize)
   }
   
-
+  tracker.track()
   system.drawHistory(scale)
   system.draw(scale)
   

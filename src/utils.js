@@ -1,24 +1,22 @@
-const G = 1
-// const G = 6.67384 * Math.pow(10, -11)
-
-function getGravityForce(p, planets) {
+function getGravityForce(p, system) {
+  const planets = system.planets
   const g = {x: 0, y: 0}
   for (let i = 0; i < planets.length; i++) {
-    const f = calcGravity(p, planets[i])
-    const a = calcAngle(p, planets[i])
+    const f = calcGravity(p, planets[i], system.G)
+    const a = calcAngle(p, planets[i], system.G)
     g.x += f * Math.sin(a)
     g.y += f * Math.cos(a)
   }
   return g
 }
 
-function calcGravity(a, b) {
+function calcGravity(a, b, G) {
   const dis = calcDis(a,b)
   if (dis < a.r || dis < b.r) return 0
   return a.m * b.m * G / Math.pow(dis, 2)
 }
 
-function calcGravtyEnergy(a, b) {
+function calcGravtyEnergy(a, b, G) {
   const dis = calcDis(a,b)
   return - a.m * b.m * G / dis
 }

@@ -68,9 +68,6 @@ const planets7 = [
   )
 ]
 
-// const scale = Math.pow(10, 9) / ww;
-const scale = 1
-
 const hour = 3600
 const day =  24 * hour
 const month = 30 * day
@@ -89,8 +86,11 @@ const callback = (system) => {
   console.log(hist0.length)
 }
 
-const system = new System(planets5)
-const camera = new Camera(system)
+// const G = 6.67384 * Math.pow(10, -11)
+
+planets5[2].controls = new Controls("keys", 0.001)
+const system = new System(planets5, 1)
+const camera = new Camera(system, 1)
 
 animate(0, day , 2, 100, 2000, callback)
 
@@ -108,8 +108,8 @@ function animate(time, endTime, step, calcCount, maxHistorySize, callback) {
   }
   
   camera.setView()
-  system.drawHistory(scale)
-  system.draw(scale)
+  system.drawHistory()
+  system.draw()
   
   if ( time + step <= endTime ) {
     requestAnimationFrame(() => {animate(time + step, endTime, step, calcCount, maxHistorySize, callback)})

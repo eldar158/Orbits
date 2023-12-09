@@ -1,7 +1,7 @@
 class Camera {
-  constructor(system) {
+  constructor(system, initZoom) {
     this.tracker = new Tracker(system)
-    this.zoom = 1
+    this.zoom = initZoom
 
     this.#addZoomListeners()
   }

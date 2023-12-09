@@ -22,21 +22,22 @@ class Planet {
     if ( this.history.length > maxHistorySize ) this.history.splice(0,1)
   }
 
-  draw (ctx, scale) {
+  draw (ctx) {
     ctx.beginPath()
     ctx.fillStyle = this.color
     ctx.strokeStyle = this.surfaceColor
-    ctx.arc(this.x / scale, this.y / scale, this.r / scale, 0, 2 * Math.PI);
+    // ctx.lineWidth = 10000000
+    ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
     ctx.fill();
     ctx.stroke()
   }
 
-  drawHistory (ctx, scale) {
+  drawHistory (ctx) {
     ctx.beginPath()
     ctx.strokeStyle = this.color
     for (let i = 0; i < this.history.length - 1; i++) {
-      ctx.moveTo(this.history[i].x / scale, this.history[i].y / scale)
-      ctx.lineTo(this.history[i+1].x / scale, this.history[i+1].y / scale)
+      ctx.moveTo(this.history[i].x, this.history[i].y)
+      ctx.lineTo(this.history[i+1].x, this.history[i+1].y)
     }
     ctx.stroke()
   }

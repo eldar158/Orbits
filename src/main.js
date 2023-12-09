@@ -38,7 +38,7 @@ const planets4 = [
 const planets5 = [
   new Planet(30, 340, ww / 2, wh / 2 , (8 / 340), 0, 'yellow', 'orange'),
   new Planet(8, 8, ww / 2, wh / 2 + 320 , -1, 0, 'blue', 'cyan'),
-  new Planet(1, 0.01, ww / 2, wh / 2 + 330 , 0, 0, 'grey', 'black'),
+  new Planet(1, 0.01, ww / 2, wh / 2 + 340 , -1.61, 0, 'grey', 'black'),
 ]
 
 const planets6 = [
@@ -90,7 +90,7 @@ const callback = (system) => {
 }
 
 const system = new System(planets5)
-const tracker = new Tracker(system.planets)
+const camera = new Camera(system)
 
 animate(0, day , 2, 100, 2000, callback)
 
@@ -107,7 +107,7 @@ function animate(time, endTime, step, calcCount, maxHistorySize, callback) {
     system.pushHistory(maxHistorySize)
   }
   
-  tracker.track()
+  camera.setView()
   system.drawHistory(scale)
   system.draw(scale)
   

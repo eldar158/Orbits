@@ -16,10 +16,6 @@ class Planet {
       this.controls = new Controls(controlType, controlForce)
     }
   }
-
-  // constructor(planet) {
-  //   this.r = planet.r
-  // }
   
   pushHistory(maxHistorySize) {
     this.history.push({x: this.x, y: this.y})

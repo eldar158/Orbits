@@ -75,27 +75,36 @@ class System {
   updateLocation(step) {
     for (let i = 0; i < this.planets.length; i++) {
       const p = this.planets[i]
-      if ( p.controls.type === "follow" ) return
 
-      p.x += step * p.vx
-      p.y += step * p.vy
+      if ( p.controls && p.controls.type === "follow" ) {
+        p.x = p.controls.x
+        p.y = p.controls.y
+      } else {
+        p.x += step * p.vx
+        p.y += step * p.vy
+      }
     }
   }
 
   updateVelocity(step) {
     for (let i = 0; i < this.planets.length; i++) {
       const p = this.planets[i]
-      if ( p.controls.type === "follow" ) return
 
-      const f = getGravityForce(p, this)
-      if (p.controls.type = "force" ) {
-        const [fx, fy] = p.controls.getForce(p.controls)
-        f.x += fx
-        f.y += fy
+      if ( p.controls) {
+        switch (p.controls.type) {
+          case "follow":
+            break;
+          case "force":
+            const [fx, fy] = p.controls.getForce(p.controls)
+            f.x += fx
+            f.y += fy
+            break;
+        }
+      } else {
+        const f = getGravityForce(p, this)
+        p.vx += step * f.x / p.m
+        p.vy += step * f.y / p.m
       }
-
-      p.vx += step * f.x / p.m
-      p.vy += step * f.y / p.m
     }
   }
 

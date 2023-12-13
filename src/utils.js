@@ -36,3 +36,36 @@ function calcDis(a, b) {
 function calcAngle(a, b) {
   return Math.atan2((b.x - a.x), (b.y - a.y))
 }
+
+
+
+
+function simToCanvas(x, y) {
+  let {a, b, c, d, e, f} = ctx.getTransform()
+  return {
+    "x": a*x + b*y + e,
+    "y": c*x + d*y + f,
+  }
+}
+
+function canvasToSim(x, y) {
+  let currentTransfrom = ctx.getTransform()
+  let {a, b, c, d, e, f} = invertMatrix(currentTransfrom)
+  return {
+    "x": a*x + b*y + e,
+    "y": c*x + d*y + f,
+  }
+}
+
+function invertMatrix(matrix) {
+  var det = matrix.a * matrix.d - matrix.b * matrix.c
+  if (det === 0) console.error("Matrix is not invertible")
+  return {
+    a: matrix.d / det,
+    b: -matrix.b / det,
+    c: -matrix.c / det,
+    d: matrix.a / det,
+    e: (matrix.c * matrix.f - matrix.d * matrix.e) / det,
+    f: (matrix.b * matrix.e - matrix.a * matrix.f) / det
+  };
+}

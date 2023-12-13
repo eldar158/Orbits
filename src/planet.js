@@ -12,7 +12,7 @@ class Planet {
 
     this.history = []
 
-    if (controlType !== 'none') {
+    if (controlType && controlType !== 'none') {
       this.controls = new Controls(controlType, controlForce)
     }
   }

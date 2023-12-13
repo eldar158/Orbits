@@ -88,7 +88,8 @@ const callback = (system) => {
 
 // const G = 6.67384 * Math.pow(10, -11)
 
-planets5[2].controls = new Controls("keys", 0.001)
+// planets5[2].controls = new Controls("keys", 0.001)
+planets5[1].controls = new MouseControls(planets5[1])
 const system = new System(planets5, 1)
 const camera = new Camera(system, 1)
 

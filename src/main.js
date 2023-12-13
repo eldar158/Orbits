@@ -89,11 +89,37 @@ const callback = (system) => {
 // const G = 6.67384 * Math.pow(10, -11)
 
 // planets5[2].controls = new Controls("keys", 0.001)
-planets5[1].controls = new MouseControls(planets5[1])
+// planets5[1].controls = new MouseControls(planets5[1])
 const system = new System(planets5, 1)
 const camera = new Camera(system, 1)
 
-animate(0, day , 2, 100, 2000, callback)
+
+
+// let astroMaker = (x, y, vx, vy) => {
+//   return new Planet(1, 0.00001, x, y, 0, 0, 'grey', 'black', 0)
+// }
+// const planets10 = [
+//   new Planet(30, 340, ww / 2, wh / 2 , (8 / 340), 0, 'yellow', 'orange'),
+//   new Planet(8, 8, ww / 2, wh / 2 + 320 , -1, 0, 'blue', 'cyan'),
+// ]
+// for (let i = 100; i < window.innerWidth - 100; i = i + 100) {
+//   for (let j = 100; j < window.innerHeight - 100; j = j + 100) {
+//     planets10.push(astroMaker(i,j,0,0))
+//   } 
+// }
+
+// const system = new System(planets10, 1)
+// const camera = new Camera(system, 1)
+
+let time = 0
+let endTime = day
+let step = 1
+let calcCount = 20
+let maxHistorySize = 2000
+
+window.step = step
+
+animate(time, endTime , step, calcCount, maxHistorySize, callback)
 
 
 

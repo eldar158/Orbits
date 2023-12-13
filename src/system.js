@@ -1,7 +1,33 @@
 class System {
-  constructor(planets, gravityConstant = 1) {
+  constructor(planets, gravityConstant = 1, dragPlanets = true) {
     this.planets = planets
     this.G = gravityConstant
+    if ( dragPlanets ) this.#addragPlanetListener()
+  }
+  
+  #addragPlanetListener() {
+    this.dragListener = (event) => { this.#dragPlanetListener(event) }
+    this.endDragListener = (event) => { this.#endDragPlanetListener(event) }
+    document.addEventListener('mousedown', this.dragListener)
+    document.addEventListener('mouseup', this.endDragListener)
+  }
+
+  removeListeners() {
+    document.removeEventListener('mousedown', this.dragListener)
+    document.removeEventListener('mouseup', this.endDragListener)
+  }
+
+  #dragPlanetListener(event) {
+    let [x, y] = [event.clientX, event.clientY] 
+    this.selectedPlanet = this.planets.find(p => p.isInPlanet(x, y))
+    if ( this.selectedPlanet ) this.selectedPlanet.controls = new MouseControls(this.selectedPlanet)
+  }
+
+  #endDragPlanetListener() {
+    if ( this.selectedPlanet ) {
+      this.selectedPlanet.controls.removeListeners()
+      this.selectedPlanet.controls = undefined
+    }
   }
 
   draw(scale) {
@@ -89,6 +115,7 @@ class System {
   updateVelocity(step) {
     for (let i = 0; i < this.planets.length; i++) {
       const p = this.planets[i]
+      const fg = getGravityForce(p, this)
 
       if ( p.controls) {
         switch (p.controls.type) {
@@ -96,14 +123,16 @@ class System {
             break;
           case "force":
             const [fx, fy] = p.controls.getForce(p.controls)
-            f.x += fx
-            f.y += fy
+            fg.x += fx
+            fg.y += fy
+
+            p.vx += step * fg.x / p.m
+            p.vy += step * fg.y / p.m
             break;
         }
       } else {
-        const f = getGravityForce(p, this)
-        p.vx += step * f.x / p.m
-        p.vy += step * f.y / p.m
+        p.vx += step * fg.x / p.m
+        p.vy += step * fg.y / p.m
       }
     }
   }

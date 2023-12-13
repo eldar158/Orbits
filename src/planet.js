@@ -1,5 +1,5 @@
 class Planet {
-  constructor (radius, mass, x, y, vx=0, vy=0, color="blue", surfaceColor='black', controlType, controlForce) {
+  constructor (radius, mass, x, y, vx=0, vy=0, color="blue", surfaceColor='black', maxHistorySize=-1, controlType, controlForce) {
     this.r = radius
     this.m = mass
     this.color = color
@@ -10,16 +10,23 @@ class Planet {
     this.vx = vx
     this.vy = vy
 
+    this.maxHistorySize = maxHistorySize
     this.history = []
 
     if (controlType && controlType !== 'none') {
       this.controls = new Controls(controlType, controlForce)
     }
   }
+
+  isInPlanet(x, y) {
+    let distance = Math.sqrt((x - this.x) ** 2 + (y - this.y) ** 2)
+    return distance <= this.r
+  }
   
   pushHistory(maxHistorySize) {
+    let max = this.maxHistorySize === -1 ? maxHistorySize : this.maxHistorySize
     this.history.push({x: this.x, y: this.y})
-    if ( this.history.length > maxHistorySize ) this.history.splice(0,1)
+    if ( this.history.length > max ) this.history.splice(0,1)
   }
 
   draw (ctx) {

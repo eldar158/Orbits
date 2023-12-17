@@ -33,9 +33,9 @@ class Planet {
     ctx.beginPath()
     ctx.fillStyle = this.color
     ctx.strokeStyle = this.surfaceColor
-    // ctx.lineWidth = 10000000
-    ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
-    ctx.fill();
+    // ctx.lineWidth = 1000000
+    ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI)
+    ctx.fill()
     ctx.stroke()
   }
 

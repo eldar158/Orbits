@@ -1,12 +1,14 @@
 class MouseControls {
-  constructor(planet) {
-    this.type = 'follow'
-    this.x = planet.x
-    this.y = planet.y
-    this.oldX = this.x
-    this.oldY = this.y
+  constructor(planet, mouseX, mouseY) {
+    this.mouseX = mouseX
+    this.mouseY = mouseY
     this.planet = planet
     this.#addListeners()
+  }
+
+  updateMouse(mouseX, mouseY) {
+    this.mouseX = mouseX
+    this.mouseY = mouseY
   }
 
   #addListeners() {
@@ -15,21 +17,21 @@ class MouseControls {
   }
 
   removeListeners() {
-    this.#endFollowMouse()
     document.removeEventListener('mousemove', this.mousemoveEvent)
   }
 
   #followMouse = (event) => {
-    this.oldX = this.x
-    this.oldY = this.y
-    let {x, y} = canvasToSim(event.clientX, event.clientY)
-    this.x = x
-    this.y = y
+    this.mouseX = event.clientX
+    this.mouseY = event.clientY
   }
-
-  #endFollowMouse() {
-    let step = window.step
-    this.planet.vx = (this.x - this.oldX) / step
-    this.planet.vy = (this.y - this.oldY) / step
+  
+  getForce() {
+    let dampner = 2
+    let [planetX, planetY] = simToCanvas(this.planet.x, this.planet.y)
+    let deltaX = this.mouseX - planetX
+    let deltaY = this.mouseY - planetY
+    let fx = this.planet.m * (deltaX  - this.planet.vx * dampner)
+    let fy = this.planet.m * (deltaY  - this.planet.vy * dampner)
+    return [fx, fy]
   }
 }

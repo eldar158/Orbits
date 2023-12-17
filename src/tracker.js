@@ -1,24 +1,24 @@
 class Tracker {
-  constructor(system) {
+  constructor(system, keyboardControls = true) {
     this.objects = system.planets
-    this.trackedIndex = -1 // -1 means none
+    this.keyboardControls = keyboardControls
+    this.trackedObject = null
     this.#addTrackingListeners()
   }
 
   getTrackingCenter() {
-    let [dx, dy] = [window.innerWidth / 2, window.innerHeight / 2]
-    if ( this.trackedIndex !== -1 ) {
-      let trackedObject = this.objects[this.trackedIndex]
-      if ( trackedObject ) {
-        dx = trackedObject.x 
-        dy = trackedObject.y
-      }
-    }
-    return [dx,dy]
+    if ( this.trackedObject ) return [this.trackedObject.x, this.trackedObject.y]
+    return [window.innerWidth / 2, window.innerHeight / 2]
   }
 
   #changeTracking(index) {
-    this.trackedIndex = index
+    if ( index === -1 ) return this.trackedObject = null
+    this.trackedObject = this.objects[index]
+    if ( this.keyboardControls ) {
+      if ( this.activeControls ) this.activeControls.removeListeners()
+      this.activeControls = new KeyboardControls(this.trackedObject.m / 10)
+      this.trackedObject.controls = this.activeControls
+    }
   }
 
   #addTrackingListeners() {

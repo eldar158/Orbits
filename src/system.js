@@ -18,9 +18,10 @@ class System {
   }
 
   #dragPlanetListener(event) {
-    let [x, y] = [event.clientX, event.clientY] 
+    let [canvasX, canvasY] = [event.clientX, event.clientY]
+    let [x, y] = canvasToSim(canvasX, canvasY)
     this.selectedPlanet = this.planets.find(p => p.isInPlanet(x, y))
-    if ( this.selectedPlanet ) this.selectedPlanet.controls = new MouseControls(this.selectedPlanet)
+    if ( this.selectedPlanet ) this.selectedPlanet.controls = new MouseControls(this.selectedPlanet, canvasX, canvasY)
   }
 
   #endDragPlanetListener() {
@@ -101,39 +102,24 @@ class System {
   updateLocation(step) {
     for (let i = 0; i < this.planets.length; i++) {
       const p = this.planets[i]
-
-      if ( p.controls && p.controls.type === "follow" ) {
-        p.x = p.controls.x
-        p.y = p.controls.y
-      } else {
-        p.x += step * p.vx
-        p.y += step * p.vy
-      }
+      p.x += step * p.vx
+      p.y += step * p.vy
     }
   }
 
   updateVelocity(step) {
     for (let i = 0; i < this.planets.length; i++) {
       const p = this.planets[i]
-      const fg = getGravityForce(p, this)
+      const F = getGravityForce(p, this)
 
       if ( p.controls) {
-        switch (p.controls.type) {
-          case "follow":
-            break;
-          case "force":
-            const [fx, fy] = p.controls.getForce(p.controls)
-            fg.x += fx
-            fg.y += fy
-
-            p.vx += step * fg.x / p.m
-            p.vy += step * fg.y / p.m
-            break;
-        }
-      } else {
-        p.vx += step * fg.x / p.m
-        p.vy += step * fg.y / p.m
+        const [fx, fy] = p.controls.getForce(p.controls)
+        F.x += fx
+        F.y += fy
       }
+
+      p.vx += step * F.x / p.m
+      p.vy += step * F.y / p.m
     }
   }
 

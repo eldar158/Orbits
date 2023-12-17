@@ -14,38 +14,40 @@ class Camera {
 
     let xCenterTranslate = width * (1 - zoom) / 2
     let yCenterTranslate = height * (1 - zoom) / 2
-
-    let transformParams = [
+    
+    // the transform function will change (x,y) to (ax + cy + e, bx + dy + f)
+    let transformMatrix = new DOMMatrix([
       zoom,
       0,
       0,
       zoom,
       xCenterTranslate + (width  / 2 - tCenter[0]) * zoom,
       yCenterTranslate + (height / 2 - tCenter[1]) * zoom,
-    ]
+    ])
 
-    // the transform will function will change (x,y) to (ax + cy + e, bx + dy + f)
-    ctx.transform(...transformParams);
+    ctx.setTransform(transformMatrix);
   }
 
 
   #addZoomListeners() {
     document.addEventListener('keydown', (event) => this.#readZoom(event))
+    document.addEventListener("wheel", (event) => this.#readZoom(event))
   }
 
   #readZoom(event) {
+    if ( event.deltaY ) return this.#changeZoom(-1 * 0.02 * event.deltaY)
+    
     let code = event.code
-
     let zoomKeys = ["NumpadAdd", "Equal"]
     let unZommKeys = ["NumpadSubtract", "Minus"]
 
-    if (zoomKeys.includes(code)) this.#changeZoom(1)
-    if (unZommKeys.includes(code)) this.#changeZoom(-1)
+    if (zoomKeys.includes(code)) return this.#changeZoom(1)
+    if (unZommKeys.includes(code)) return this.#changeZoom(-1)
   }
 
-  #changeZoom = (dir) => {
-    let speed = this.zoom / 20
-    let newZoom = this.zoom + speed * dir
+  #changeZoom = (scale) => {
+    let speed = scale * this.zoom / 20
+    let newZoom = this.zoom + speed
     if ( newZoom < Math.pow(10, -8)  || newZoom > Math.pow(10, 8) ) return
     this.zoom = newZoom
   }

@@ -117,14 +117,13 @@ let step = 1
 let calcCount = 20
 let maxHistorySize = 2000
 
-window.step = step
-
 animate(time, endTime , step, calcCount, maxHistorySize, callback)
 
 
 
 function animate(time, endTime, step, calcCount, maxHistorySize, callback) {
   // console.log(time / day)
+  
   resetCanvas()
 
   const dt = step / calcCount
@@ -134,7 +133,6 @@ function animate(time, endTime, step, calcCount, maxHistorySize, callback) {
     system.pushHistory(maxHistorySize)
   }
   
-  camera.setView()
   system.drawHistory()
   system.draw()
   
@@ -146,11 +144,7 @@ function animate(time, endTime, step, calcCount, maxHistorySize, callback) {
 }
 
 function resetCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-
-function track(planetIndex) {
-  const planet = system.planets[planetIndex]
-  ctx.translate(-planet.x + ww /2, -planet.y + wh / 2)
+  ctx.setTransform(1, 0, 0, 1, 0, 0)
+  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+  camera.setView()
 }

@@ -1,10 +1,9 @@
 class KeyboardControls {
   constructor(force) {
-    this.type = 'force'
-    this.forward = false
     this.left = false
     this.right = false
-    this.reverse = false
+    this.up = false
+    this.down = false
     this.force = force
 
     this.#addListeners()
@@ -22,6 +21,12 @@ class KeyboardControls {
     document.removeEventListener('keyup', this.keyupListener)
   }
 
+  getForce() {
+    let fx = this.force * (+ this.right - this.left)
+    let fy = this.force * (- this.up + this.down)
+    return [fx, fy]
+  }
+
   #useKeys = (event, value) => {
     switch (event.key) {
       case 'ArrowLeft':
@@ -31,10 +36,10 @@ class KeyboardControls {
         this.right = value
         break
       case 'ArrowUp':
-        this.forward = value
+        this.up = value
         break
       case 'ArrowDown':
-        this.reverse = value
+        this.down = value
         break
     }
   }
